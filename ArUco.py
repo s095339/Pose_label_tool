@@ -5,7 +5,8 @@ import time
 import pyrealsense2 as rs
 import os
 
-
+import glob
+import natsort
 from scipy.spatial.transform import Rotation
 
 ARUCO_DICT = {
@@ -33,15 +34,31 @@ ARUCO_DICT = {
 }
 
 camera_inst = {
-      "fx":913.41826508,
-      "fy":912.84577345,
-      "cx":655.48686401,
-      "cy":369.45247047
+      "fx":642.905,
+      "fy":642.905,
+      "cx":648.156,
+      "cy":359.988
 }
 
  #p[659.377 371.096]  f[908.057 906.401]
 #mycode==================
+def mp4_to_video(img_list):
+    image_folder = 'demoVideo'
+    video_name = 'video.avi'
 
+    images = img_list
+    
+    #images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
+    frame = cv2.imread(os.path.join(image_folder, images[0]))
+    height, width, layers = frame.shape
+
+    video = cv2.VideoWriter(video_name, 0, 1, (width,height))
+
+    for image in images:
+        video.write(cv2.imread(os.path.join(image_folder, image)))
+
+    cv2.destroyAllWindows()
+    video.release()
 
 def draw_box(img: np.ndarray, rvec: np.ndarray, tvec: np.ndarray, position_world: np.ndarray, size: np.ndarray, camera_matrix: np.ndarray, distCoeff: np.ndarray):  
     """
@@ -189,7 +206,7 @@ def pose_estimation(frame, aruco_dict_type, matrix_coefficients, distortion_coef
 
     
 
-aruco_type = "DICT_5X5_1000"
+aruco_type = "DICT_4X4_1000"
 
 arucoDict = cv2.aruco.getPredefinedDictionary(ARUCO_DICT[aruco_type])
 
@@ -206,6 +223,7 @@ arucoParams = cv2.aruco.DetectorParameters()
 
 
 # Configure depth and color streams
+"""
 pipeline = rs.pipeline()
 config = rs.config()
 
@@ -233,6 +251,7 @@ pp = profile.get_stream(rs.stream.color)
 intr = pp.as_video_stream_profile().get_intrinsics() # Downcast to video_stream_profile and fetch intrinsics
 #distr = pp.as_video_stream_profile().get_distortion()
 print(intr)
+"""
 
 
 intrinsic_camera = np.array(
@@ -243,7 +262,46 @@ intrinsic_camera = np.array(
      ], dtype = np.float32
 )
 
+path = "./demoVideo/2_bag/"
+#img_list = os.listdir(path)
+#for i in range(len(img_list)):
+#    img_list[i].replace("_Color_", "")
 
+
+images = os.listdir(path)
+images = natsort.natsorted(images)
+
+
+
+for img_name in images:
+    #print(color_image.shape) 
+    if img_name[-4:] != ".png": continue
+    
+    img_pth=os.path.join(path, img_name)
+    print(img_pth)
+    color_image = cv2.imread(img_pth)
+    print(color_image.shape)
+    output = pose_estimation(color_image, ARUCO_DICT[aruco_type], intrinsic_camera, np.zeros([0,0,0,0,0]))
+    cv2.imshow('Estimated Pose', output)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 try:
     while True:
 
@@ -273,7 +331,7 @@ try:
         cv2.imshow('Estimated Pose', output)
 
 
-        """
+        
         # If depth and color resolutions are different, resize color image to match depth image for display
         if depth_colormap_dim != color_colormap_dim:
             resized_color_image = cv2.resize(color_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
@@ -284,7 +342,7 @@ try:
         # Show images
         cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('RealSense', images)
-        """
+        
 
 
 
@@ -298,4 +356,4 @@ finally:
     # Stop streaming
     pipeline.stop()
     
-
+"""

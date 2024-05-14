@@ -28,17 +28,13 @@ if not found_rgb:
     print("The demo requires Depth camera with Color sensor")
     exit(0)
 
-config.enable_stream(rs.stream.depth, 600, 800, rs.format.z16, 12)
-config.enable_stream(rs.stream.color, 600, 800, rs.format.bgr8, 12)
+config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 15)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 15)
 
 # Start streaming
-profile = pipeline.start(config)
-pp = profile.get_stream(rs.stream.color)
-intr = pp.as_video_stream_profile().get_intrinsics() # Downcast to video_stream_profile and fetch intrinsics
-print(intr)
+pipeline.start(config)
 
 try:
-    imgid = 0
     while True:
 
         # Wait for a coherent pair of frames: depth and color
@@ -59,33 +55,18 @@ try:
         color_colormap_dim = color_image.shape
 
         # If depth and color resolutions are different, resize color image to match depth image for display
-        """
         if depth_colormap_dim != color_colormap_dim:
             resized_color_image = cv2.resize(color_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
             images = np.hstack((resized_color_image, depth_colormap))
         else:
             images = np.hstack((color_image, depth_colormap))
-        """
-
 
         # Show images
         cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-        cv2.imshow('RealSense', color_image)
-        
-        
-        key = cv2.waitKey(1) & 0xFF
-    
-        if key == ord('q'):
-            break
-        if key == ord('a'):
-            cv2.imwrite('img_{}.jpg'.format(imgid))
+        cv2.imshow('RealSense', images)
+        cv2.waitKey(1)
 
 finally:
 
     # Stop streaming
     pipeline.stop()
-    
-    
-    
-    
-

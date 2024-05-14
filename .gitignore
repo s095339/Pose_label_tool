@@ -1,3 +1,6 @@
-/ArUco_vid
-/demoImage
+/ArUco_vid/
+/demoVideo/*_bag
+*.mp4
+*.bag
+*.avi
 
