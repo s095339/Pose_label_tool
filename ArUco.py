@@ -257,12 +257,12 @@ print(intr)
 intrinsic_camera = np.array(
      [
           [camera_inst['fx'],                 0.0,  camera_inst['cx']],
-          [0.0,                 camera_inst['fy'],  camera_inst['cx']],
+          [0.0,                 camera_inst['fy'],  camera_inst['cy']],
           [0.0,                               0.0,                1.0],
      ], dtype = np.float32
 )
 
-path = "./demoVideo/2_bag/"
+path = "./demoVideo/4_bag/"
 #img_list = os.listdir(path)
 #for i in range(len(img_list)):
 #    img_list[i].replace("_Color_", "")
@@ -272,11 +272,13 @@ images = os.listdir(path)
 images = natsort.natsorted(images)
 
 
-
+id = 0
+down_rate = 10
 for img_name in images:
     #print(color_image.shape) 
     if img_name[-4:] != ".png": continue
-    
+    id = (id+1)%down_rate
+    if id != 0: continue
     img_pth=os.path.join(path, img_name)
     print(img_pth)
     color_image = cv2.imread(img_pth)
