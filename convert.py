@@ -29,7 +29,7 @@ magick_command = '"{}"'.format(args.magick_executable) if len(args.magick_execut
 use_gpu = 1 if not args.no_gpu else 0
 
 if not args.skip_matching:
-    os.makedirs(args.source_path + "/distorted/sparse", exist_ok=True)
+    os.makedirs(args.source_path + "/sparse", exist_ok=True)
 
     ## Feature extraction
     feat_extracton_cmd = colmap_command + " feature_extractor "\
@@ -77,14 +77,22 @@ if exit_code != 0:
     logging.error(f"Mapper failed with code {exit_code}. Exiting.")
     exit(exit_code)
 
-files = os.listdir(args.source_path + "/sparse")
-os.makedirs(args.source_path + "/sparse/0", exist_ok=True)
+files_ = os.listdir(args.source_path)
+files = []
+for f in files_:
+    if f[-4:]==".txt": continue
+    files.append(f)
+
+
+os.makedirs(args.source_path + "/0", exist_ok=True)
+
+
 # Copy each file from the source directory to the destination directory
 for file in files:
     if file == '0':
         continue
-    source_file = os.path.join(args.source_path, "sparse", file)
-    destination_file = os.path.join(args.source_path, "sparse", "0", file)
+    source_file = os.path.join(args.source_path, file)
+    destination_file = os.path.join(args.source_path, "0", file)
     shutil.move(source_file, destination_file)
 
 if(args.resize):
