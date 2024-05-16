@@ -1,0 +1,30 @@
+Brotli @ file:///croot/brotli-split_1714483155106/work
+certifi @ file:///croot/certifi_1707229174982/work/certifi
+charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+configparser==7.0.0
+contourpy==1.1.1
+cycler==0.12.1
+fonttools==4.51.0
+glob2==0.7
+idna @ file:///croot/idna_1714398848350/work
+importlib_resources==6.4.0
+kiwisolver==1.4.5
+matplotlib==3.7.5
+natsort @ file:///tmp/build/80754af9/natsort_1611692802956/work
+numpy @ file:///croot/numpy_and_numpy_base_1682520569166/work
+packaging @ file:///croot/packaging_1710807400464/work
+pillow==10.3.0
+platformdirs @ file:///croot/platformdirs_1692205439124/work
+pooch @ file:///croot/pooch_1695850093751/work
+PyMySQL==1.1.0
+pyparsing==3.1.2
+pyrealsense2==2.55.1.6486
+PySocks @ file:///tmp/build/80754af9/pysocks_1605305779399/work
+python-dateutil==2.9.0.post0
+PyYAML==6.0.1
+requests @ file:///croot/requests_1707355572290/work
+scipy==1.10.1
+shutils==0.1.0
+six==1.16.0
+urllib3 @ file:///croot/urllib3_1707770551213/work
+zipp==3.18.1
